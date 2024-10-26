@@ -63,8 +63,8 @@ function send_to_line_group($Data) {
     $message = "新しいフォーム送信がありました:\n\n";
     
     // MW_WP_Form_Data オブジェクトからデータを取得
-    $title = '';
     foreach ($Data->gets() as $key => $value) {
+        $title = '';
         switch ($key) {
             case 'mwform_radio-877':
                 $title = 'お問い合わせの種類';
@@ -87,10 +87,10 @@ function send_to_line_group($Data) {
             case 'mwform_textarea-570':
                 $title = 'お問い合わせ内容';
                 break;
-            default
-                continue;
+            default:
+                continue 2;
         }
-        $message .= $key . ": " . $value . "\n";
+        $message .= $title . ": " . $value . "\n";
     }
 
     $response = wp_remote_post('https://api.line.me/v2/bot/message/push', array(
