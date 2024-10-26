@@ -45,7 +45,7 @@ function register_line_notification_settings() {
     register_setting('line-notification-settings-group', 'line_group_id');
 }
 
-add_action('wpforms_process_complete', 'send_to_line_group', 10, 4);
+add_action('wpforms_process_confirmed', 'send_to_line_group', 10, 4);
 function send_to_line_group($fields, $entry, $form_data, $entry_id) {
     // 設定から値を取得
     $channel_access_token = get_option('line_channel_access_token');

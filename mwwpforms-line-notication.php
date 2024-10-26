@@ -45,15 +45,51 @@ function register_line_notification_settings() {
     register_setting('line-notification-settings-group', 'line_group_id');
 }
 
+// mwform_radio-877:お問い合わせの種類
+// mwform_text-137:お名前
+// mwform_text-476:フリガナ
+// mwform_text-32:企業様名
+// mwform_text-508:お電話番号
+// mwform_text-414:メールアドレス
+// mwform_textarea-570:お問い合わせ内容
+
 // MW WP Formの送信後にLINEグループに通知を送る
-add_action('mwform_after_send_mw-wp-form-38', 'send_to_line_group', 10, 3);
-function send_to_line_group($form_key, $data, $Data) {
+add_action('mwform_after_send_mw-wp-form-38', 'send_to_line_group', 10, 1);
+function send_to_line_group($Data) {
     // 設定から値を取得
     $channel_access_token = get_option('line_channel_access_token');
     $group_id = get_option('line_group_id');
 
     $message = "新しいフォーム送信がありました:\n\n";
-    foreach ($data as $key => $value) {
+    
+    // MW_WP_Form_Data オブジェクトからデータを取得
+    $title = '';
+    foreach ($Data->gets() as $key => $value) {
+        switch ($key) {
+            case 'mwform_radio-877':
+                $title = 'お問い合わせの種類';
+                break;
+            case 'mwform_text-137':
+                $title = 'お名前';
+                break;
+            case 'mwform_text-476':
+                $title = 'フリガナ';
+                break;
+            case 'mwform_text-32':
+                $title = '企業様名';
+                break;
+            case 'mwform_text-508':
+                $title = 'お電話番号';
+                break;
+            case 'mwform_text-414':
+                $title = 'メールアドレス';
+                break;
+            case 'mwform_textarea-570':
+                $title = 'お問い合わせ内容';
+                break;
+            default
+                continue;
+        }
         $message .= $key . ": " . $value . "\n";
     }
 
